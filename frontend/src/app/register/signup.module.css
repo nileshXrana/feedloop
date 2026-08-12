@@ -1,0 +1,272 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: #f3f2f0;
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.header {
+  padding: 24px 50px;
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  text-decoration: underline;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px 40px;
+}
+
+.title {
+  font-size: 30px !important;
+  font-weight: 300;
+  color: rgba(0, 0, 0, 0.9);
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 400px;
+  padding: 24px;
+  box-sizing: border-box;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input :global(.MuiOutlinedInput-root) {
+  border-radius: 4px;
+  height: 36px;
+  background-color: #ffffff;
+}
+
+.input :global(.MuiOutlinedInput-notchedOutline) {
+  border: 1px solid rgba(0, 0, 0, 0.6) !important;
+  transition: border-color 0.15s, border-width 0.15s;
+}
+
+.input:hover :global(.MuiOutlinedInput-notchedOutline) {
+  border-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+.input :global(.MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline) {
+  border-color: #0a66c2 !important;
+  border-width: 2px !important;
+}
+
+.showHideBtn {
+  color: #0a66c2 !important;
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  text-transform: none !important;
+  cursor: pointer;
+  padding: 0 8px !important;
+  min-width: unset !important;
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.checkbox {
+  padding: 0;
+  margin-right: 8px;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.checkboxChecked {
+  color: #0f7356 !important;
+}
+
+.checkboxLabel {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.7);
+  user-select: none;
+  cursor: pointer;
+}
+
+.consentText {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  text-align: center;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.link {
+  color: #0a66c2;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.submitButton {
+  background-color: #0a66c2;
+  color: #ffffff;
+  border: none;
+  border-radius: 28px;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 600;
+  text-transform: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.submitButton:hover {
+  background-color: #004182;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  margin: 16px 0;
+  width: 100%;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.divider::before {
+  margin-right: 16px;
+}
+
+.divider::after {
+  margin-left: 16px;
+}
+
+.oauthButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  border-radius: 28px;
+  background-color: #ffffff;
+  color: rgba(0, 0, 0, 0.6);
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 24px;
+  text-transform: none;
+  transition: background-color 0.15s, border-color 0.15s;
+}
+
+.oauthButton:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+  border: 1.5px solid rgba(0, 0, 0, 0.8);
+}
+
+.oauthIcon {
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.signinText {
+  margin: 10px !important;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.9);
+  text-align: center;
+}
+
+.businessLinkContainer {
+  margin-top: 24px;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.9);
+  text-align: center;
+}
+
+.footer {
+  padding: 16px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+}
+
+.footerText {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+}
+
+.footerLink {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.6);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footerLink:hover {
+  color: #0a66c2;
+  text-decoration: underline;
+}
+
+.footerNav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  align-items: center;
+}
+
+.errorMessage {
+  color: #cc1016;
+  font-size: 12px;
+  margin-top: 4px;
+  text-align: left;
+}
