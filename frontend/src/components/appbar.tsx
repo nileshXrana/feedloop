@@ -11,7 +11,7 @@ import Menu from '@mui/material/Menu';
 import Button from '@mui/material/Button';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useAppDispatch, useAppSelector } from '@/store';
-import { getMeThunk, logoutThunk } from '@/features/users/user.action';
+import { getUserThunk, logoutThunk } from '@/features/users/user.action';
 import { useRouter } from 'next/navigation';
 
 export default function PrimarySearchAppBar() {
@@ -23,7 +23,7 @@ export default function PrimarySearchAppBar() {
     const isMenuOpen = Boolean(anchorEl);
 
     React.useEffect(() => {
-        dispatch(getMeThunk());
+        dispatch(getUserThunk());
     }, [dispatch]);
 
     const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {

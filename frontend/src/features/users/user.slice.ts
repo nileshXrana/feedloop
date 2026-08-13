@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginThunk, registerThunk, logoutThunk, getMeThunk } from './user.action';
+import { loginThunk, registerThunk, logoutThunk, getUserThunk } from './user.action';
 import { userState } from './user.type';
 
 export const userSlice = createSlice({
@@ -24,7 +24,7 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      .addCase(getMeThunk.fulfilled, (state, action) => {
+      .addCase(getUserThunk.fulfilled, (state, action) => {
         state.user = action.payload;
       })
       .addCase(logoutThunk.fulfilled, (state) => {

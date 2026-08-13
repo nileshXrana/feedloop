@@ -37,9 +37,9 @@ export const logout = async () => {
     }
 };
 
-export const getMe = async () => {
+export const getUser = async () => {
     try {
-        const response = await axios.get('http://localhost:8000/auth/me');
+        const response = await axios.get('http://localhost:8000/auth/user');
         return response.data;
     } catch (error) {
         throw error;

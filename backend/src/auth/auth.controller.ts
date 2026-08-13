@@ -46,9 +46,9 @@ export class AuthController {
     return { message: 'Logged out successfully' };
   }
 
-  @Get('me')
+  @Get('user')
   @UseGuards(AuthGuard)
-  async getMe(@Request() req: any) {
+  async getUser(@Request() req: any) {
     const user = await this.usersService.findOne(req.user.email);
     if (!user || !user.isActive) {
       throw new UnauthorizedException();

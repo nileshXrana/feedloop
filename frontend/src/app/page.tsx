@@ -351,7 +351,7 @@ export default function Home() {
                                     >
                                         Add Comment
                                     </Button>
-                                </Box>  
+                                </Box>
 
                                 {openCommentsFeedbackId === feedback.uuid && (
                                     <Box className={styles.commentsSection}>
