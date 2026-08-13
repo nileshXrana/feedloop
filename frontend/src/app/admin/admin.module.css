@@ -83,7 +83,7 @@
 
 .deletedBadge {
     background-color: #ffebee;
-    color: #c62828;
+    color: #c62828bb;
     padding: 0.1rem 0.5rem;
     border-radius: 4px;
     font-size: 0.75rem;
@@ -93,7 +93,7 @@
 
 .activeBadge {
     background-color: #e8f5e9;
-    color: #2e7d32;
+    color: #2e7d32b9;
     padding: 0.1rem 0.5rem;
     border-radius: 4px;
     font-size: 0.75rem;

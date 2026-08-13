@@ -53,6 +53,7 @@ const CommentNode: React.FC<CommentNodeProps> = ({
     };
 
     return (
+
         <Box className={`${styles.commentNode} ${isOwn ? styles.ownComment : ''}`}>
             <Box className={styles.commentHeader}>
                 <Typography className={styles.commentAuthor} variant="body2">
@@ -350,7 +351,7 @@ export default function Home() {
                                     >
                                         Add Comment
                                     </Button>
-                                </Box>
+                                </Box>  
 
                                 {openCommentsFeedbackId === feedback.uuid && (
                                     <Box className={styles.commentsSection}>
@@ -400,13 +401,13 @@ export default function Home() {
                     <Typography variant="body1">No feedbacks found.</Typography>
                 )}
 
-                <Box className={styles.paginationContainer}>
-                    <Pagination
-                        count={10}
-                        page={page}
-                        onChange={(_, val) => setPage(val)}
-                    />
-                </Box>
+            </Box>
+            <Box className={styles.paginationContainer}>
+                <Pagination
+                    count={10}
+                    page={page}
+                    onChange={(_, val) => setPage(val)}
+                />
             </Box>
         </Box>
     );

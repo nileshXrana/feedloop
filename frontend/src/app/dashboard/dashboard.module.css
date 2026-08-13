@@ -2,7 +2,6 @@
     margin: 0 auto;
     width: 70vw;
     height: calc(100vh - 64px);
-    /* background-color: #f5f5f5; */
     padding: 1.5rem;
 }
 
@@ -41,4 +40,10 @@
 .status {
     text-transform: uppercase;
     font-weight: bold !important;
+}
+
+.description {
+    padding: 0.5rem 0;
+    color: #000000a6;
+    font-size: 0.9rem !important;   
 }

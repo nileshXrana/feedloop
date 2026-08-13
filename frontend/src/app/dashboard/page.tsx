@@ -58,8 +58,32 @@ const page = () => {
                     feedbacks.map((feedback) => (
                         <Box key={feedback.uuid} className={styles.feedbackItem} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Box sx={{ flexGrow: 1 }}>
-                                <Typography variant="h5">{feedback.title}</Typography>
-                                <Typography variant="body1">{feedback.description}</Typography>
+                                <Typography sx={{ display: 'flex', justifyContent: 'space-between' }} variant="h5">
+                                    {feedback.title}
+                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                                        <FormControl size="small" sx={{ minWidth: 120 }}>
+                                            <Select
+                                                value={feedback.status}
+                                                onChange={(e) => handleStatusChange(feedback.uuid, e.target.value as any)}
+                                            >
+                                                <MenuItem value="public">PUBLIC</MenuItem>
+                                                <MenuItem value="private">PRIVATE</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                        <Button
+                                            variant="outlined"
+                                            color="error"
+                                            startIcon={<DeleteIcon />}
+                                            onClick={() => handleDelete(feedback.uuid)}
+                                        >
+                                            Delete
+                                        </Button>
+                                    </Box>
+
+                                </Typography>
+                                <Typography className={styles.description}>
+                                    {feedback.description}
+                                </Typography>
                                 <Typography className={styles.tagContainer} variant="body2">
                                     {feedback.tags.map((tag: any) => (
                                         <span className={styles.tag} key={tag.uuid}>
@@ -67,25 +91,6 @@ const page = () => {
                                         </span>
                                     ))}
                                 </Typography>
-                            </Box>
-                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                                <FormControl size="small" sx={{ minWidth: 120 }}>
-                                    <Select
-                                        value={feedback.status}
-                                        onChange={(e) => handleStatusChange(feedback.uuid, e.target.value as any)}
-                                    >
-                                        <MenuItem value="public">PUBLIC</MenuItem>
-                                        <MenuItem value="private">PRIVATE</MenuItem>
-                                    </Select>
-                                </FormControl>
-                                <Button
-                                    variant="outlined"
-                                    color="error"
-                                    startIcon={<DeleteIcon />}
-                                    onClick={() => handleDelete(feedback.uuid)}
-                                >
-                                    Delete
-                                </Button>
                             </Box>
                         </Box>
                     ))

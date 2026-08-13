@@ -18,8 +18,8 @@ export class UserController {
         }
     }
 
+
     @Get()
-    @UseGuards(AuthGuard)
     getUsers() {
         return this.userService.getUsers();
     }
@@ -149,6 +149,7 @@ export class UserController {
         return this.userService.getAdminUsers(parseInt(page, 10) || 1, parseInt(limit, 10) || 10);
     }
 
+    // admin can toogle user login, feedbacks and comments
     @Post('admin/toggle-login/:userId')
     @UseGuards(AuthGuard)
     async toggleUserActive(@Req() req: any, @Param('userId') userId: string) {

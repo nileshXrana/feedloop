@@ -9,6 +9,7 @@ import { FeedbackDto } from './dto/feedback.dto';
 import { Tag } from './entities/tag.entity';
 import { Comment } from './entities/comment.entity';
 import { Vote } from './entities/vote.entity';
+import { AppDataSource } from '../data-source';
 
 @Injectable()
 export class UserService {
@@ -102,98 +103,12 @@ export class UserService {
         return feedbacks;
     }
 
-    async getFeedbacks(query: any, loggedInUserId?: string, isAdmin = false) {
-        const { search, tags, authors, sortByScore, page = 1, limit = 10, showDeleted } = query;
-
-        const qb = this.feedbackRepository.createQueryBuilder('feedback')
-            .leftJoinAndSelect('feedback.user', 'user')
-            .leftJoinAndSelect('feedback.tags', 'tags');
-
-        qb.addSelect(
-            `(SELECT COALESCE(COUNT(*), 0) FROM votes v WHERE v."feedbackId" = feedback.uuid AND v.type = 'upvote') - ` +
-            `(SELECT COALESCE(COUNT(*), 0) FROM votes v WHERE v."feedbackId" = feedback.uuid AND v.type = 'downvote')`,
-            'feedback_score'
-        );
-
-        if (isAdmin) {
-            if (showDeleted === 'false' || showDeleted === false || !showDeleted) {
-                qb.andWhere('feedback.isActive = true');
-            }
-        } else {
-            qb.andWhere('feedback.isActive = true');
-            qb.andWhere('user.feedbacksHidden = false');
-            if (loggedInUserId) {
-                qb.andWhere('(feedback.status = :publicStatus OR feedback.userId = :userId)', {
-                    publicStatus: 'public',
-                    userId: loggedInUserId
-                });
-            } else {
-                qb.andWhere('feedback.status = :publicStatus', { publicStatus: 'public' });
-            }
-        }
-
-        if (search) {
-            qb.andWhere('(feedback.title ILIKE :search OR feedback.description ILIKE :search)', { search: `%${search}%` });
-        }
-
-        if (tags) {
-            const tagsArr = Array.isArray(tags) ? tags : [tags];
-            if (tagsArr.length > 0) {
-                qb.andWhere((sub) => {
-                    const subQuery = sub.subQuery()
-                        .select('t.feedbackId')
-                        .from(Tag, 't')
-                        .where('t.content IN (:...tagsArr)', { tagsArr })
-                        .getQuery();
-                    return 'feedback.uuid IN ' + subQuery;
-                });
-            }
-        }
-
-        if (authors) {
-            const authorsArr = Array.isArray(authors) ? authors : [authors];
-            if (authorsArr.length > 0) {
-                qb.andWhere('user.username IN (:...authorsArr)', { authorsArr });
-            }
-        }
-
-        if (sortByScore === 'asc') {
-            qb.orderBy('feedback_score', 'ASC');
-        } else if (sortByScore === 'desc') {
-            qb.orderBy('feedback_score', 'DESC');
-        } else {
-            qb.orderBy('feedback.title', 'ASC');
-        }
-
-        const parsedPage = parseInt(page as string, 10) || 1;
-        const parsedLimit = parseInt(limit as string, 10) || 10;
-        const skip = (parsedPage - 1) * parsedLimit;
-        qb.skip(skip).take(parsedLimit);
-
-        const { entities, raw } = await qb.getRawAndEntities();
-
-        const feedbacks = await Promise.all(entities.map(async (feedback, index) => {
-            const r = raw[index];
-            const score = parseInt(r.feedback_score || '0', 10);
-
-            let userVote: string | null = null;
-            if (loggedInUserId) {
-                const vote = await this.voteRepository.findOne({
-                    where: { userId: loggedInUserId, feedbackId: feedback.uuid }
-                });
-                if (vote) {
-                    userVote = vote.type;
-                }
-            }
-
-            return {
-                ...feedback,
-                score,
-                userVote
-            };
-        }));
-
-        return feedbacks;
+    async getFeedbacks(_query: any, _loggedInUserId?: string, _isAdmin = false) {
+        return this.feedbackRepository.find({
+            where: { isActive: true },
+            relations: ['tags', 'user'],
+            order: { title: 'ASC' }
+        });
     }
 
     async voteFeedback(feedbackId: string, userId: string, type: 'upvote' | 'downvote') {
@@ -254,33 +169,11 @@ export class UserService {
     }
 
     async getFeedbackComments(feedbackId: string, loggedInUserId?: string, showDeletedComments = false, isAdmin = false) {
-        const qb = this.commentRepository.createQueryBuilder('comment')
-            .leftJoinAndSelect('comment.user', 'user')
-            .where('comment.feedbackId = :feedbackId', { feedbackId })
-            .orderBy('comment.createdAt', 'ASC');
 
-        if (!isAdmin) {
-            qb.andWhere('user.commentsHidden = false');
-        }
-
-        const comments = await qb.getMany();
-
-        return comments.map((comment) => {
-            const isDeleted = !comment.isActive;
-            const shouldShowOriginal = isAdmin && (showDeletedComments === true || (showDeletedComments as any) === 'true');
-
-            if (isDeleted && !shouldShowOriginal) {
-                return {
-                    ...comment,
-                    content: '[deleted]',
-                    user: {
-                        uuid: '',
-                        username: '[deleted]',
-                        email: ''
-                    }
-                };
-            }
-            return comment;
+        return this.commentRepository.find({
+            where: { feedbackId, isActive: true },
+            relations: ['user'],
+            order: { createdAt: 'ASC' }
         });
     }
 
@@ -338,19 +231,54 @@ export class UserService {
     }
 
     async toggleUserFeedbacksHidden(userId: string) {
-        const user = await this.userRepository.findOneBy({ uuid: userId });
-        if (!user) throw new Error('User not found');
-        user.feedbacksHidden = !user.feedbacksHidden;
-        await this.userRepository.save(user);
-        return user;
+        return await AppDataSource.transaction(async (manager) => {
+            const userRepo = manager.getRepository(User);
+            const feedbackRepo = manager.getRepository(Feedback);
+
+            const user = await userRepo.findOneBy({ uuid: userId });
+            if (!user) throw new Error('User not found');
+
+            const newHidden = !user.feedbacksHidden;
+            user.feedbacksHidden = newHidden;
+
+            await userRepo.save(user);
+
+            if (newHidden) {
+                await feedbackRepo.createQueryBuilder()
+                    .update(Feedback)
+                    .set({ isActive: false })
+                    .where('userId = :userId', { userId })
+                    .execute();
+            }
+
+            return user;
+        });
     }
 
     async toggleUserCommentsHidden(userId: string) {
-        const user = await this.userRepository.findOneBy({ uuid: userId });
-        if (!user) throw new Error('User not found');
-        user.commentsHidden = !user.commentsHidden;
-        await this.userRepository.save(user);
-        return user;
+
+        return await AppDataSource.transaction(async (manager) => {
+            const userRepo = manager.getRepository(User);
+            const commentRepo = manager.getRepository(Comment);
+
+            const user = await userRepo.findOneBy({ uuid: userId });
+            if (!user) throw new Error('User not found');
+
+            const newHidden = !user.commentsHidden;
+            user.commentsHidden = newHidden;
+
+            await userRepo.save(user);
+
+            if (newHidden) {
+                await commentRepo.createQueryBuilder()
+                    .update(Comment)
+                    .set({ isActive: false })
+                    .where('userId = :userId', { userId })
+                    .execute();
+            }
+
+            return user;
+        });
     }
 
     async getUniqueTags() {

@@ -246,7 +246,7 @@ export default function AdminPage() {
     return (
         <Box className={styles.container}>
             <Typography variant="h4" sx={{ fontWeight: 'bold', mb: 2 }}>
-                Admin Control Panel
+                Admin Panel
             </Typography>
 
             <Box className={styles.tabs}>
@@ -414,7 +414,7 @@ export default function AdminPage() {
                                                 <Button
                                                     variant="contained"
                                                     size="small"
-                                                    color={usr.isActive ? "error" : "success"}
+
                                                     onClick={() => handleToggleActive(usr.uuid)}
                                                 >
                                                     {usr.isActive ? "Disable Login" : "Enable Login"}
@@ -422,7 +422,6 @@ export default function AdminPage() {
                                                 <Button
                                                     variant="outlined"
                                                     size="small"
-                                                    color={usr.feedbacksHidden ? "success" : "warning"}
                                                     onClick={() => handleToggleFeedbacks(usr.uuid)}
                                                 >
                                                     {usr.feedbacksHidden ? "Show Feedbacks" : "Hide Feedbacks"}
@@ -430,7 +429,6 @@ export default function AdminPage() {
                                                 <Button
                                                     variant="outlined"
                                                     size="small"
-                                                    color={usr.commentsHidden ? "success" : "warning"}
                                                     onClick={() => handleToggleComments(usr.uuid)}
                                                 >
                                                     {usr.commentsHidden ? "Show Comments" : "Hide Comments"}
