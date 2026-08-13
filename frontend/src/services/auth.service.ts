@@ -37,5 +37,14 @@ export const logout = async () => {
     }
 };
 
+export const getMe = async () => {
+    try {
+        const response = await axios.get('http://localhost:8000/auth/me');
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
+
 
 

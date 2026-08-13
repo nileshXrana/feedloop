@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { loginThunk, registerThunk, logoutThunk, } from './user.action';
+import { loginThunk, registerThunk, logoutThunk, getMeThunk } from './user.action';
 import { userState } from './user.type';
 
 export const userSlice = createSlice({
@@ -18,12 +18,17 @@ export const userSlice = createSlice({
       })
       .addCase(loginThunk.fulfilled, (state, action) => {
         state.loading = false;
-        // console.log('Login fulfilled:', action.payload);
         state.user = action.payload;
       })
       .addCase(loginThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(getMeThunk.fulfilled, (state, action) => {
+        state.user = action.payload;
+      })
+      .addCase(logoutThunk.fulfilled, (state) => {
+        state.user = null;
       })
   }
 });

@@ -5,9 +5,11 @@ import { UserService } from './user.service';
 import { UserController } from './user.controller';
 import { Tag } from './entities/tag.entity';
 import { Feedback } from './entities/feedback.entity';
+import { Comment } from './entities/comment.entity';
+import { Vote } from './entities/vote.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([User, Feedback, Tag])],
+    imports: [TypeOrmModule.forFeature([User, Feedback, Tag, Comment, Vote])],
     providers: [UserService],
     controllers: [UserController],
     exports: [UserService],

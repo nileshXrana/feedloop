@@ -27,6 +27,12 @@ export class User {
     @Column({ type: 'boolean', default: true })
     isActive: boolean;
 
+    @Column({ type: 'boolean', default: false })
+    feedbacksHidden: boolean;
+
+    @Column({ type: 'boolean', default: false })
+    commentsHidden: boolean;
+
     // relations
     @OneToMany(() => Feedback, (feedback) => feedback.user)
     feedbacks: Feedback[];

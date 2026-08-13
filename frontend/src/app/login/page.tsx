@@ -51,8 +51,12 @@ export default function LoginPage() {
   const onSubmit = async (data: loginFormData) => {
     setApiError('');
     try {
-      await dispatch(loginThunk(data)).unwrap();
-      router.push('/dashboard');
+      const loggedInUser = await dispatch(loginThunk(data)).unwrap();
+      if (loggedInUser.role === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/dashboard');
+      }
     } catch (err: any) {
       setApiError(err);
     }

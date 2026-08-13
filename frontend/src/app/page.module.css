@@ -1,0 +1,192 @@
+.container {
+    display: flex;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    gap: 2rem;
+}
+
+.filterPanel {
+    width: 300px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background-color: #fcfcfc;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    align-self: flex-start;
+}
+
+.feedSection {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.feedbackCard {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.voteSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 40px;
+}
+
+.voteArrow {
+    cursor: pointer;
+    font-size: 2rem !important;
+}
+
+.voteArrowActive {
+    color: #1976d2;
+}
+
+.score {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin: 0.2rem 0;
+}
+
+.cardContent {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.author {
+    color: #666666;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.title {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.description {
+    color: #333333;
+    line-height: 1.5;
+}
+
+.tagContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.tag {
+    background-color: #f1f1f1;
+    color: #555555;
+    padding: 0.25rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.cardFooter {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.commentsSection {
+    margin-top: 1rem;
+    border-top: 1px solid #eeeeee;
+    padding-top: 1rem;
+}
+
+.commentForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.commentInput {
+    width: 100%;
+}
+
+.commentTree {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.commentNode {
+    border-left: 2px solid #e0e0e0;
+    padding-left: 1rem;
+    margin-top: 0.75rem;
+}
+
+.ownComment {
+    background-color: #fff9c4;
+    border-left: 2px solid #fbc02d;
+    padding: 0.5rem;
+    border-radius: 0 4px 4px 0;
+}
+
+.commentHeader {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.commentAuthor {
+    font-weight: 600;
+}
+
+.commentTime {
+    color: #888888;
+}
+
+.commentContent {
+    margin-top: 0.25rem;
+    font-size: 0.95rem;
+}
+
+.commentActions {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+.commentActionBtn {
+    padding: 0 !important;
+    min-width: unset !important;
+    text-transform: none !important;
+    font-size: 0.8rem !important;
+}
+
+.replyForm {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.paginationContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}

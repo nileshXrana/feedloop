@@ -2,12 +2,16 @@ import { Body, Controller, Post, Get, HttpCode, HttpStatus, Res, UseGuards, Requ
 import { AuthService } from './auth.service';
 import { CreateUserDto, SignInDto } from './dto/auth.dto';
 import { AuthGuard } from './auth.guard';
+import { UserService } from '../users/user.service';
 import * as express from 'express';
 
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(
+    private readonly authService: AuthService,
+    private readonly usersService: UserService
+  ) { }
 
 
   @HttpCode(HttpStatus.OK)
@@ -42,5 +46,14 @@ export class AuthController {
     return { message: 'Logged out successfully' };
   }
 
+  @Get('me')
+  @UseGuards(AuthGuard)
+  async getMe(@Request() req: any) {
+    const user = await this.usersService.findOne(req.user.email);
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException();
+    }
+    return user;
+  }
 
 }

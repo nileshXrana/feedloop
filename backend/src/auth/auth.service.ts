@@ -25,6 +25,10 @@ export class AuthService {
                 throw new UnauthorizedException('Invalid credentials');
             }
 
+            if (!foundUser.isActive) {
+                throw new UnauthorizedException('User account is disabled');
+            }
+
             const payload = { uuid: foundUser.uuid, email: foundUser.email };
             return {
                 access_token: await this.jwtService.signAsync(payload),
