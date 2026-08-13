@@ -18,7 +18,6 @@ export class UserController {
         }
     }
 
-
     @Get()
     getUsers() {
         return this.userService.getUsers();
@@ -51,7 +50,7 @@ export class UserController {
                 loggedInUserId = payload.uuid;
             } catch { }
         }
-        return this.userService.getFeedbacks(query, loggedInUserId, false);
+        return this.userService.getFeedbacks(query);
     }
 
     @Post('feedback/:feedbackId/vote')
@@ -135,7 +134,7 @@ export class UserController {
     @UseGuards(AuthGuard)
     async getAdminFeedbacks(@Req() req: any, @Query() query: any) {
         await this.verifyAdmin(req);
-        return this.userService.getFeedbacks(query, undefined, true);
+        return this.userService.getAdminFeedbacks(query);
     }
 
     @Get('admin/users')
@@ -149,7 +148,6 @@ export class UserController {
         return this.userService.getAdminUsers(parseInt(page, 10) || 1, parseInt(limit, 10) || 10);
     }
 
-    // admin can toogle user login, feedbacks and comments
     @Post('admin/toggle-login/:userId')
     @UseGuards(AuthGuard)
     async toggleUserActive(@Req() req: any, @Param('userId') userId: string) {

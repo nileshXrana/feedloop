@@ -18,6 +18,7 @@ export class Vote {
     @Column({ type: 'varchar' })
     type: 'upvote' | 'downvote';
 
+    // relations
     @ManyToOne(() => User, { onDelete: 'CASCADE' })
     @JoinColumn({ name: 'userId' })
     user: User;

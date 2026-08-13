@@ -3,12 +3,12 @@ import { CreateUserDto } from '../auth/dto/auth.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import * as bycrypt from 'bcrypt';
-import { User } from './entities/user.entity';
-import { Feedback } from './entities/feedback.entity';
+import { User } from './dto/entities/user.entity';
+import { Feedback } from './dto/entities/feedback.entity';
 import { FeedbackDto } from './dto/feedback.dto';
-import { Tag } from './entities/tag.entity';
-import { Comment } from './entities/comment.entity';
-import { Vote } from './entities/vote.entity';
+import { Tag } from './dto/entities/tag.entity';
+import { Comment } from './dto/entities/comment.entity';
+import { Vote } from './dto/entities/vote.entity';
 import { AppDataSource } from '../data-source';
 
 @Injectable()
@@ -103,12 +103,118 @@ export class UserService {
         return feedbacks;
     }
 
-    async getFeedbacks(_query: any, _loggedInUserId?: string, _isAdmin = false) {
-        return this.feedbackRepository.find({
+    async getAdminFeedbacks(_query: any) {
+        const { search, page, limit, tags, authors, sortByScore, showDeleted } = _query;
+        console.log(page, limit, tags, authors, search, sortByScore, showDeleted);
+
+        let feedbacks;
+        if (showDeleted) {
+            feedbacks = await this.feedbackRepository.find({
+                where: {},
+                relations: ['tags', 'user', 'votes'],
+                order: { title: 'ASC' }
+            });
+        } else {
+            feedbacks = await this.feedbackRepository.find({
+                where: { isActive: true },
+                relations: ['tags', 'user', 'votes'],
+                order: { title: 'ASC' }
+            });
+        }
+
+        // apply search filter
+        let filteredFeedbacks = feedbacks;
+        if (search) {
+            const searchLower = search.toLowerCase();
+            filteredFeedbacks = filteredFeedbacks.filter(f => f.title.toLowerCase().includes(searchLower) || f.description.toLowerCase().includes(searchLower));
+        }
+
+        // apply tags filter
+        if (tags) {
+            const tagList = Array.isArray(tags) ? tags : [tags];
+            filteredFeedbacks = filteredFeedbacks.filter(f => f.tags.some(t => tagList.includes(t.content)));
+        }
+
+        // apply authors filter
+        if (authors) {
+            const authorList = Array.isArray(authors) ? authors : [authors];
+            filteredFeedbacks = filteredFeedbacks.filter(f => authorList.includes(f.user.username));
+        }
+
+        // apply pagination
+        const parsedPage = parseInt(page as any, 10) || 1;
+        const parsedLimit = parseInt(limit as any, 10) || 10;
+        const startIndex = (parsedPage - 1) * parsedLimit;
+        const endIndex = startIndex + parsedLimit;
+        filteredFeedbacks = filteredFeedbacks.slice(startIndex, endIndex);
+
+        // apply sorting by score
+        if (sortByScore) {
+            filteredFeedbacks.sort((a, b) => {
+                const scoreA = a.votes.filter(v => v.type === 'upvote').length - a.votes.filter(v => v.type === 'downvote').length;
+                const scoreB = b.votes.filter(v => v.type === 'upvote').length - b.votes.filter(v => v.type === 'downvote').length;
+                return sortByScore === 'asc' ? scoreA - scoreB : scoreB - scoreA;
+            });
+        }
+
+        return filteredFeedbacks;
+
+    }
+
+    async getFeedbacks(_query: any) {
+        const { search, page, limit, tags, authors, sortByScore } = _query;
+        console.log(page, limit, tags, authors, search, sortByScore);
+
+        const feedbacks = await this.feedbackRepository.find({
             where: { isActive: true },
-            relations: ['tags', 'user'],
+            relations: ['tags', 'user', 'votes'],
             order: { title: 'ASC' }
         });
+
+        // apply search filter
+        let filteredFeedbacks = feedbacks;
+        if (search) {
+            const searchLower = search.toLowerCase();
+            filteredFeedbacks = filteredFeedbacks.filter(f => f.title.toLowerCase().includes(searchLower) || f.description.toLowerCase().includes(searchLower));
+        }
+
+        // apply tags filter
+        if (tags) {
+            const tagList = Array.isArray(tags) ? tags : [tags];
+            filteredFeedbacks = filteredFeedbacks.filter(f => f.tags.some(t => tagList.includes(t.content)));
+        }
+
+        // apply authors filter
+        if (authors) {
+            const authorList = Array.isArray(authors) ? authors : [authors];
+            filteredFeedbacks = filteredFeedbacks.filter(f => authorList.includes(f.user.username));
+        }
+
+
+        // apply pagination
+        const parsedPage = parseInt(page as any, 10) || 1;
+        const parsedLimit = parseInt(limit as any, 10) || 10;
+        const startIndex = (parsedPage - 1) * parsedLimit;
+        const endIndex = startIndex + parsedLimit;
+        filteredFeedbacks = filteredFeedbacks.slice(startIndex, endIndex);
+
+        // apply sorting by score
+        if (sortByScore) {
+            filteredFeedbacks.sort((a, b) => {
+                const scoreA = a.votes.filter(v => v.type === 'upvote').length - a.votes.filter(v => v.type === 'downvote').length;
+                const scoreB = b.votes.filter(v => v.type === 'upvote').length - b.votes.filter(v => v.type === 'downvote').length;
+                return sortByScore === 'asc' ? scoreA - scoreB : scoreB - scoreA;
+            });
+        }
+
+        // add score to each feedback
+        const feedbacksWithScore = filteredFeedbacks.map(f => {
+            const score = f.votes.filter(v => v.type === 'upvote').length - f.votes.filter(v => v.type === 'downvote').length;
+            return { ...f, score };
+        });
+
+        return feedbacksWithScore;
+
     }
 
     async voteFeedback(feedbackId: string, userId: string, type: 'upvote' | 'downvote') {
@@ -168,7 +274,16 @@ export class UserService {
         return newComment;
     }
 
-    async getFeedbackComments(feedbackId: string, loggedInUserId?: string, showDeletedComments = false, isAdmin = false) {
+
+    async getFeedbackComments(feedbackId: string, loggedInUserId?: string, showDeleted?: boolean, isAdmin?: boolean) {
+
+        if (showDeleted && isAdmin) {
+            return this.commentRepository.find({
+                where: { feedbackId },
+                relations: ['user'],
+                order: { createdAt: 'ASC' }
+            });
+        }
 
         return this.commentRepository.find({
             where: { feedbackId, isActive: true },

@@ -39,7 +39,7 @@ interface CommentNodeProps {
 
 const CommentNode: React.FC<CommentNodeProps> = ({ comment, onDeleteComment }) => {
     return (
-        <Box sx={{ borderLeft: '2px solid #ccc', pl: 2, mt: 1 }}>
+        <Box sx={{ pl: 2, mt: 1 }}>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography variant="subtitle2" sx={{ fontWeight: 'bold' }}>
                     {comment.user?.username || '[deleted]'}
@@ -339,9 +339,7 @@ export default function AdminPage() {
                                         <Typography variant="body1" sx={{ mt: 1, mb: 1 }}>
                                             {feedback.description}
                                         </Typography>
-                                        <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 1 }}>
-                                            Score: {feedback.score}
-                                        </Typography>
+
                                         <Button
                                             variant="outlined"
                                             size="small"

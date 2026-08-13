@@ -1,12 +1,12 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import { User } from './users/entities/user.entity';
+import { User } from './users/dto/entities/user.entity';
 import { SeederOptions } from 'typeorm-extension';
 import { AdminSeeder } from './seeds/admin.seeder';
 import * as dotenv from 'dotenv';
-import { Tag } from './users/entities/tag.entity';
-import { Feedback } from './users/entities/feedback.entity';
-import { Comment } from './users/entities/comment.entity';
-import { Vote } from './users/entities/vote.entity';
+import { Tag } from './users/dto/entities/tag.entity';
+import { Feedback } from './users/dto/entities/feedback.entity';
+import { Comment } from './users/dto/entities/comment.entity';
+import { Vote } from './users/dto/entities/vote.entity';
 dotenv.config();
 
 

@@ -1,6 +1,6 @@
 import { Seeder } from 'typeorm-extension';
 import { DataSource } from 'typeorm';
-import { User, UserRole } from '../users/entities/user.entity';
+import { User, UserRole } from '../users/dto/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
 export class AdminSeeder implements Seeder {
